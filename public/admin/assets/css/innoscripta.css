@@ -1,0 +1,21 @@
+.dtr-bs-modal .modal-dialog {
+  min-width: 50%;
+}
+body{
+  background-color: #eee;
+  padding: 10px 0 50px 0;
+}
+
+table.dataTable.dtr-column > tbody > tr > td.control:before, table.dataTable.dtr-column > tbody > tr > td.control:before, table.dataTable.dtr-column > tbody > tr > th.control:before, table.dataTable.dtr-column > tbody > tr > th.control:before{
+  color: green !important;
+  padding: 5px;
+  border: 1px solid green;
+  font-weight: bolder;
+}
+.bg-info{
+  background-color: #d7f6fd !important;
+}
+.text-muted{
+  font-size: 12px !important;
+  color: #888 !important;
+}
