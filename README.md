@@ -1,66 +1,159 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# **News Aggregator API Documentation**
 
-## About Laravel
+## **Project Overview**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The **News Aggregator API** is a backend system built with Laravel that aggregates news articles from multiple sources, processes them, and serves them to a frontend application via API endpoints. It provides filtering, searching, and live updates for news articles. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### **Key Features**
+- Aggregates news from **News API (newsapi.org)**, **The Guardian**, and **The New York Times**.
+- Allows filtering by author, category, and source.
+- Uses queues for asynchronous fetching and processing of news.
+- Includes live updates using **Laravel Scheduler** and **Pusher**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## **News Sources**
+1. **News API (newsapi.org)**: A free API for breaking news and headlines across various categories.
+2. **The Guardian**: Provides access to Guardian articles with filtering capabilities.
+3. **The New York Times**: Offers news content with detailed metadata.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+> **Note:** These APIs have request limits for free developer accounts. You may encounter rate limit errors during high usage.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## **API Endpoints**
 
-## Laravel Sponsors
+### **1. Get Articles**
+Retrieve a list of articles with optional filters and search parameters.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### **Endpoint**
+```
+GET /api/articles
+```
 
-### Premium Partners
+#### **Query Parameters**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+| Parameter    | Type    | Required | Description                                                                     | Example                       |
+|--------------|---------|----------|---------------------------------------------------------------------------------|-------------------------------|
+| `news-source`| String  | No       | Search for articles by news-source (values are: NewsOrg, TheGuardian, NYTimes). | `news-source=NYTimes`         |
+| `search`     | String  | No       | Search for articles by title or description.                                    | `search=breaking news`        |
+| `author`     | String  | No       | Filter articles by author name.                                                 | `author=John Doe`             |
+| `category`   | String  | No       | Filter articles by category.                                                    | `category=Technology`         |
+| `source`     | String  | No       | Filter articles by source.                                                      | `source=bbc-news`                |
+| `date`       | Date    | No       | Filter articles by publish date.                                                | `date=2024-12-02`                |
+| `start`      | Integer | No       | Specify the page number for paginated results. Defaults to 1.                   | `start=2`                     |
+| `length`     | Integer | No       | Number of articles per page. Defaults to 10.                                    | `length=5`                    |
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### **Example Request**
 
-## Code of Conduct
+```http
+GET /api/articles?news-source=NYTimes&search=tech&author=Jane&category=Technology&source=bbc-news&date=2024-12-02
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+#### **Response Example**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Status Code**: `200 OK`
 
-## License
+```json
+{
+   "succss": true,
+   "recordsTotal": 1,
+   "data": [
+      {
+         "id": 1,
+         "news_api": "NYTimes",
+         "url": "https://www.nytimes.com/2024/12/01/books/review/apartment-women-gu-byeong-mo.html",
+         "category": "Books",
+         "source": "The New York Times",
+         "author": "Marie-Helene Bertino",
+         "title": "Subsidized Housing With a Wait List, and a Catch",
+         "description": "The South Korean writer Gu Byeong-Mo’s novel “Apartment Women” imagines a commune of young families with a short fuse.",
+         "date": "2024-12-01 10:00:05"
+      }
+   ]
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### **Error Responses**
+- **500 Internal Server Error**: Server-related issues.
+
+---
+
+## **Installation and Setup**
+
+### **1. Clone the Repository**
+```bash
+git clone https://github.com/your-repository.git
+cd your-repository
+```
+
+### **2. Install Dependencies**
+```bash
+composer install
+```
+
+### **3. Configure the Environment**
+Copy the `.env.example` file to `.env` and update the necessary configurations:
+- Database connection (`DB_` settings).
+- API keys for `NEWS_API`, `GUARDIAN_API`, and `NY_TIMES_API`.
+
+### **4. Run Migrations**
+Set up the database schema:
+```bash
+php artisan migrate
+```
+
+### **5. Queue and Scheduler Setup**
+#### **Queue Worker**
+Start the queue worker to handle jobs for fetching and processing news:
+```bash
+php artisan queue:work
+```
+
+#### **Scheduler**
+Ensure the Laravel scheduler is running to trigger periodic updates:
+```bash
+php artisan schedule:run
+```
+> **Note:** In production, set up a cron job for the scheduler:
+```bash
+* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
+```
+
+### **6. Serve the Application**
+Run the Laravel development server:
+```bash
+php artisan serve
+```
+
+---
+
+## **Live Updates with Pusher**
+- Live updates using **Pusher**.
+- Configure the `.env` file with your Pusher credentials:
+  ```env
+  PUSHER_APP_ID=your_app_id
+  PUSHER_APP_KEY=your_app_key
+  PUSHER_APP_SECRET=your_app_secret
+  PUSHER_APP_CLUSTER=your_app_cluster
+  ```
+- Events are broadcasted when new articles are fetched.
+
+---
+
+## **Key Notes**
+- **Rate Limits**: The free developer accounts for APIs used in this project are limited. Monitor usage carefully.
+- **Extensibility**: Add more sources easily by implementing new service classes that adhere to the existing design pattern.
+- **Testing**: Test the API with tools like Postman.
+
+---
+
+## **Example Workflow**
+1. The scheduler runs periodically to check for new articles.
+2. If new articles are detected, jobs are queued to fetch and store them.
+3. Frontend clients can call the `/api/articles` endpoint to retrieve and display the latest articles.

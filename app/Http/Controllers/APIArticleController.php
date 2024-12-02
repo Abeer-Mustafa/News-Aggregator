@@ -23,6 +23,11 @@ class APIArticleController extends Controller
             });
          }
    
+         // Filter by date
+         if ($request->has('date') && !empty($request->date)) {
+            $query->whereDate('date', $request->date);
+         }
+
          // Filter by author
          if ($request->has('author') && !empty($request->author)) {
             $query->where('author', $request->author);
@@ -39,6 +44,9 @@ class APIArticleController extends Controller
          }
 
          $data_table = self::data_table($query, ['id','news_api', 'news_id', 'url', 'date', 'category', 'source', 'author', 'title', 'description']);
+         unset($data_table['draw']);
+         unset($data_table['recordsFiltered']);
+         $data_table['succss'] = true;
          $data_table['data'] = new ArticleCollection($data_table['data']);
          return response()->json($data_table);
       } catch (\Exception $ex) {
