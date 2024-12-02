@@ -10,8 +10,3 @@ Route::controller(ArticleController::class)->group(function() {
 });
 
 Route::get('logs', [LogViewerController::class, 'index']);
-
-Route::get('/test', function() {
-    \App\Traits\PusherNews::triggerEventNews();
-    return 'done';
-});
