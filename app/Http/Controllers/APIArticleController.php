@@ -14,12 +14,11 @@ class APIArticleController extends Controller
       try{
          $query = Article::query();
    
-         // Search in title or content
-         if ($request->has('search') && !empty($request->search)) {
+         // Search in title or description
+         if ($request->has('q') && !empty($request->q)) {
             $query->where(function ($subQuery) use ($request) {
-                  $subQuery->where('title', 'LIKE', '%' . $request->search . '%')
-                           ->orWhere('description', 'LIKE', '%' . $request->search . '%');
-                           // ->orWhere('content', 'LIKE', '%' . $request->search . '%');
+               $searchTerm = strtolower($request->q);
+               $subQuery->whereRaw('MATCH(title, description) AGAINST(? IN BOOLEAN MODE)', [$searchTerm]);
             });
          }
    

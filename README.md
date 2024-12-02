@@ -8,6 +8,7 @@ The **News Aggregator API** is a backend system built with Laravel that aggregat
 ### **Key Features**
 - Aggregates news from **News API (newsapi.org)**, **The Guardian**, and **The New York Times**.
 - Allows filtering by author, category, and source.
+- Supports full-text search in article titles and description.
 - Uses queues for asynchronous fetching and processing of news.
 - Includes live updates using **Laravel Scheduler** and **Pusher**.
 
@@ -37,7 +38,7 @@ GET /api/articles
 | Parameter    | Type    | Required | Description                                                                     | Example                       |
 |--------------|---------|----------|---------------------------------------------------------------------------------|-------------------------------|
 | `news-source`| String  | No       | Search for articles by news-source (values are: NewsOrg, TheGuardian, NYTimes). | `news-source=NYTimes`         |
-| `search`     | String  | No       | Search for articles by title or description.                                    | `search=breaking news`        |
+| `q`          | String  | No       | Search for articles by title or description.                                    | `q=breaking news`        |
 | `author`     | String  | No       | Filter articles by author name.                                                 | `author=John Doe`             |
 | `category`   | String  | No       | Filter articles by category.                                                    | `category=Technology`         |
 | `source`     | String  | No       | Filter articles by source.                                                      | `source=bbc-news`                |
@@ -50,7 +51,7 @@ GET /api/articles
 #### **Example Request**
 
 ```http
-GET /api/articles?news-source=NYTimes&search=tech&author=Jane&category=Technology&source=bbc-news&date=2024-12-02
+GET /api/articles?news-source=NYTimes&q=tech&author=Jane&category=Technology&source=bbc-news&date=2024-12-02
 ```
 
 ---

@@ -25,6 +25,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             // $table->text('content')->nullable();
 
+            $table->fullText(['title', 'description']);
+
             $table->timestamps();
         });
     }
