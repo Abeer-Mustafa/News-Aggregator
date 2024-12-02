@@ -8,7 +8,7 @@ use Exception;
 use Carbon\Carbon;
 
 use App\Jobs\FetchNewsJob;
-use App\Events\NewsUpdatedEvent;
+use App\Traits\PusherNews;
 use App\Traits\Resp;
 
 use App\Models\Article;
@@ -146,7 +146,7 @@ class NYTimes implements NewsServiceInterface
                   // 'content' => isset($article->lead_paragraph) ? $article->lead_paragraph : null,
                ]);
             }
-            event(new NewsUpdatedEvent);
+            PusherNews::triggerEventNews();
          }
       } catch (\Exception $ex) {
          Resp::catchErrorJson($ex);

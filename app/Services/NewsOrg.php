@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 use App\View\Components\NewsOrg as NewsOrgComponent;
 use App\Jobs\FetchNewsJob;
-use App\Events\NewsUpdatedEvent;
+use App\Traits\PusherNews;
 use App\Traits\Resp;
 
 use App\Models\Article;
@@ -150,7 +150,7 @@ class NewsOrg implements NewsServiceInterface
                   // 'content' => isset($article->content) ? $article->content : null,
                ]);
             }
-            event(new NewsUpdatedEvent);
+            PusherNews::triggerEventNews();
          }
       } catch (\Exception $ex) {
          Resp::catchErrorJson($ex);

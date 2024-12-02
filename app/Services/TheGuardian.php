@@ -8,7 +8,7 @@ use Exception;
 use Carbon\Carbon;
 
 use App\Jobs\FetchNewsJob;
-use App\Events\NewsUpdatedEvent;
+use App\Traits\PusherNews;
 use App\Traits\Resp;
 
 use App\Models\Article;
@@ -136,7 +136,7 @@ class TheGuardian implements NewsServiceInterface
                   // 'content' => isset($article->fields) && isset($article->fields->body) ? $article->fields->body : null,
                ]);
             }
-            event(new NewsUpdatedEvent);
+            PusherNews::triggerEventNews();
          }
       } catch (\Exception $ex) {
          Resp::catchErrorJson($ex);
