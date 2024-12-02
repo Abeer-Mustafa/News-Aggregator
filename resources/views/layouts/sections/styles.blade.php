@@ -15,4 +15,4 @@
 <link rel="stylesheet" href="{{ asset('admin') }}/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
 <link rel="stylesheet" href="{{ asset('admin') }}/assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css" />
 
-<link rel="stylesheet" href="{{ asset('admin') }}/assets/css/innoscripta.css" />
+<link rel="stylesheet" href="{{ asset('admin') }}/assets/css/news_aggregator.css" />
