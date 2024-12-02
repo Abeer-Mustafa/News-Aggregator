@@ -40,6 +40,20 @@ trait Resp
       ];
    }  
 
+   public static function catchErrorAPI($ex){
+      $message = method_exists($ex, 'getResponse') ? $ex->getResponse()->getBody()->getContents() : $ex->getMessage();
+      Log::alert("{$message}\nFile: {$ex->getFile()}\nLine: {$ex->getLine()}");
+
+      $data = json_decode($message, true);
+      if (isset($data['message'])) {
+         $message = $data['message'];
+      }
+      return [
+         'status' => false,
+         'message' => $message,
+      ];
+   }  
+
    public static function catchErrorPage($ex){
       Log::alert($ex->getMessage().'. File: '.$ex->getFile().' Line: '.$ex->getLine());
       if (method_exists('getStatisCode', $ex)){
